@@ -1,0 +1,26 @@
+﻿@model StarIt.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div>
+    <form action="/login" method="post">
+        <h1>@ViewBag.Title</h1>
+        @Html.ValidationSummary()
+        <p>
+            <label>Email</label>
+            <input name="Email" type="text" value="@Model.Email"/>
+            @Html.ValidationMessageFor(m => m.Email)
+        </p>
+
+        <p>
+            <label>Password</label>
+            <input name="Password" type="password" value="@Model.Password"/>
+            @Html.ValidationMessageFor(m => m.Password)
+        </p>
+        <p>
+            <button type="submit">Log in</button>
+        </p>
+    </form>
+</div>
