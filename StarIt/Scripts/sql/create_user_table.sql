@@ -1,5 +1,5 @@
 create table app_user(
-    user_id char(36) default(uuid()) primary key,
+    user_id binary(16) default(uuid_to_bin(uuid())) primary key,
     email varchar(50),
     password varchar(100),
     salt varchar(50),

@@ -1,4 +1,4 @@
-﻿namespace StarIt.Bl;
+﻿namespace StarIt.Bl.Common;
 
 public interface IEncrypt
 {

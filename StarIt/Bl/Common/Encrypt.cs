@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace StarIt.Bl;
+namespace StarIt.Bl.Common;
 
 public class Encrypt : IEncrypt
 {
