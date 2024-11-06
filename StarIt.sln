@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarIt", "StarIt\StarIt.csproj", "{6D1D51CB-A170-4D45-8191-9AB247BFBA0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarItTest", "StarItTest\StarItTest.csproj", "{29FD51B0-3FFF-4CF1-87B3-5C54B6776170}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{6D1D51CB-A170-4D45-8191-9AB247BFBA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D1D51CB-A170-4D45-8191-9AB247BFBA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D1D51CB-A170-4D45-8191-9AB247BFBA0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29FD51B0-3FFF-4CF1-87B3-5C54B6776170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29FD51B0-3FFF-4CF1-87B3-5C54B6776170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29FD51B0-3FFF-4CF1-87B3-5C54B6776170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29FD51B0-3FFF-4CF1-87B3-5C54B6776170}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
