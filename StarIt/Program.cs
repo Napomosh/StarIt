@@ -1,13 +1,18 @@
+using StarIt.Bl.Common;
+using StarIt.Dal.AuthDal;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<StarIt.Dal.AuthDal.IAuthDal, StarIt.Dal.AuthDal.AuthDal>();
-builder.Services.AddSingleton<StarIt.Bl.IEncrypt, StarIt.Bl.Encrypt>();
+builder.Services.AddSingleton<IAuthDal, AuthDal>();
+builder.Services.AddSingleton<IEncrypt, Encrypt>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IUserTokenDal, UserTokenDal>();
 
 builder.Services.AddScoped<StarIt.Bl.Auth.IAuth, StarIt.Bl.Auth.Auth>();
 builder.Services.AddScoped<StarIt.Bl.ICurrentUser, StarIt.Bl.CurrentUser>();
+builder.Services.AddScoped<IWebCookie, WebCookie>();
 
 
 builder.Services.AddMvc();

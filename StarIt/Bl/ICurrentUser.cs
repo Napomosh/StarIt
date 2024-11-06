@@ -2,5 +2,6 @@
 
 public interface ICurrentUser
 {
-    public bool IsAuthenticated();
+    public Task<bool> IsAuthenticated();
+    public Task<Guid> GetUserIdByToken();
 }

@@ -7,7 +7,7 @@ namespace StarIt.Controllers.Login;
 
 public class LoginController(IAuth auth) : Controller
 {
-    private readonly IAuth _auth = auth;
+    private readonly IAuth auth = auth;
 
     [HttpGet]
     [Route("/login")]
@@ -16,18 +16,22 @@ public class LoginController(IAuth auth) : Controller
         return View("Login", new UserViewModel());
     }
 
+    [HttpGet]
+    [Route("/logout")]
+    public IActionResult Logout()
+    {
+        auth.Logout();
+        return Redirect("/");
+    }
+
     [HttpPost]
     [Route("/login")]
     public async Task<IActionResult> LoginPost(UserViewModel model)
     {
         if (ModelState.IsValid)
         {
-            if (await _auth.Login(model.Email, model.Password))
-            {
-                ViewData.Add(ViewDataConstants.VIEW_DATA_IS_LOGGED, true);
-                ViewData.Add(ViewDataConstants.VIEW_DATA_USER_NICKNAME, model.Nickname);
+            if (await auth.Login(model.Email, model.Password, model.RememberMe == true))
                 return Redirect("/");
-            }
         }
         return View("Login", model);
     }

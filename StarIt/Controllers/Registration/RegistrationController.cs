@@ -30,9 +30,9 @@ public class RegistrationController(IAuth auth) : Controller
                 ModelState.AddModelError("Email", "Email already exists");
                 return View("Register", model);
             }
-            await _auth.RegisterUser(userModel);
-            ViewData.Add(ViewDataConstants.VIEW_DATA_IS_LOGGED, true);
-            ViewData.Add(ViewDataConstants.VIEW_DATA_USER_NICKNAME, model.Nickname);
+            if (await _auth.RegisterUser(userModel) != Guid.Empty)
+                await _auth.Login(userModel.Email, userModel.Password);
+            
             return Redirect("/");
         }
         ViewBag.Title = "Registration";

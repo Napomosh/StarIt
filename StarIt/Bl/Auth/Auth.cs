@@ -1,45 +1,62 @@
-﻿using StarIt.Dal.AuthDal;
+﻿using System.Text;
+using StarIt.Bl.Common;
+using StarIt.Dal.AuthDal;
 using StarIt.Models;
 using StarIt.Tools;
 
 namespace StarIt.Bl.Auth;
 
-public class Auth(IAuthDal authDal, IEncrypt encrypt, IHttpContextAccessor httpContextAccessor) : IAuth
+public class Auth(
+    IAuthDal authDal,
+    IEncrypt encrypt,
+    IHttpContextAccessor httpContextAccessor,
+    IUserTokenDal userTokenDal,
+    IWebCookie webCookie) : IAuth
 {
-    private readonly IAuthDal _authDal = authDal;
-    private readonly IEncrypt _encrypt = encrypt;
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    
+    private readonly IAuthDal authDal = authDal;
+    private readonly IEncrypt encrypt = encrypt;
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
+    private readonly IUserTokenDal userTokenDal = userTokenDal;
+    private readonly IWebCookie webCookie = webCookie;
+
     public async Task<Guid> RegisterUser(UserModel user)
     {
-        user.Salt = Guid.NewGuid().ToString();
-        user.Password = _encrypt.HashPassword(user.Password!, user.Salt);
+        if (await IsEmailExist(user.Email))
+            return Guid.Empty;
         
-        var result = await _authDal.CreateUser(user);
-        SetLoginCookie(Convert.ToHexString(user.UserId));
+        user.Salt = Guid.NewGuid().ToString();
+        user.Password = encrypt.HashPassword(user.Password!, user.Salt);
+        var result = await authDal.CreateUser(user);
         return result;
     }
 
-    public async Task<bool> Login(string email, string password)
+    public async Task<bool> Login(string email, string password, bool rememberMe = false)
     {
-        var user = await _authDal.GetUser(email);
-
-        var result = user.IsEmpty || 
-                _encrypt.HashPassword(password, user.Salt).Equals(user.Password);
-
-        if (result)
-            SetLoginCookie(Convert.ToHexString(user.UserId));
-
+        var user = await authDal.GetUser(email);
+        var result = !user.IsEmpty && encrypt.HashPassword(password, user.Salt).Equals(user.Password);
+        if (!result) 
+            return false;
+        
+        httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_USER_ID, new Guid(user.UserId).ToString());
+        string? userId = httpContextAccessor.HttpContext?.Session.GetString(AuthConstants.AUTH_USER_ID);
+        if (rememberMe)
+        {
+            Guid token = await userTokenDal.Create(user.UserId);
+            webCookie.AddSecure(AuthConstants.AUTH_REMEMBER_ME_COOKIE, token.ToString()
+                , AuthConstants.AUTH_REMEMBER_ME_COOKIE_DAYS);
+        }
         return result;
     }
 
-    public void SetLoginCookie(string value)
+    public async Task Logout()
     {
-        _httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_USER_ID, "Convert.ToHexString(user.UserId)");
+        httpContextAccessor.HttpContext?.Session.Clear();
+        await  userTokenDal.Delete(new Guid( webCookie.Get(AuthConstants.AUTH_REMEMBER_ME_COOKIE)).ToByteArray());
+        webCookie.Delete(AuthConstants.AUTH_REMEMBER_ME_COOKIE);
     }
 
     public async Task<bool> IsEmailExist(string email)
     {
-        return await _authDal.IsEmailExist(email);
+        return await authDal.IsEmailExist(email);
     }
 }

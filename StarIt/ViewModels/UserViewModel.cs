@@ -14,7 +14,8 @@ public class UserViewModel
     [Display(Name = "Password")]
     public string Password { get; set; } = string.Empty;
     
-    [Required]
-    [Display(Name = "User nickname")]
+    [Display(Name = "User nickname. By default it is your email address")]
     public string Nickname { get; set; } = string.Empty;
+    
+    public bool? RememberMe { get; set; }
 }
