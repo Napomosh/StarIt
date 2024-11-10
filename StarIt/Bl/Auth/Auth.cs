@@ -38,13 +38,16 @@ public class Auth(
             return false;
         
         httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_USER_ID, new Guid(user.UserId).ToString());
-        string? userId = httpContextAccessor.HttpContext?.Session.GetString(AuthConstants.AUTH_USER_ID);
         if (rememberMe)
         {
             Guid token = await userTokenDal.Create(user.UserId);
             webCookie.AddSecure(AuthConstants.AUTH_REMEMBER_ME_COOKIE, token.ToString()
                 , AuthConstants.AUTH_REMEMBER_ME_COOKIE_DAYS);
         }
+
+        var roles = await authDal.GetRoles(user.UserId);
+        if (roles.Any(r => r.Abbreviation == AuthConstants.AUTH_ROLE_ADMIN_ABBR))
+            httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_ROLE_CURRENT, AuthConstants.AUTH_ROLE_ADMIN_ABBR);
         return result;
     }
 

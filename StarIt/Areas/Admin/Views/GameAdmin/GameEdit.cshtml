@@ -1,0 +1,24 @@
+@model StarIt.ViewModels.GameViewModel;
+
+@{
+    ViewData["Title"] = "Edit game";
+}
+
+<div>
+    <form method="post" action="/games/edit">
+        @Html.ValidationSummary()
+        <p>
+            <label>New game title</label>
+            <textarea name="Title" type="text" value="@Model.Title"></textarea>
+            @Html.ValidationMessageFor(m => m.Title)
+        </p>
+        <p>
+            <label>New game description</label>
+            <textarea name="Description" type="text" value="@Model.Description"></textarea>
+            @Html.ValidationMessageFor(m => m.Description)
+        </p>
+        <p>
+            <button type="submit">Add new game</button>
+        </p>
+    </form>
+</div>

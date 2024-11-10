@@ -16,4 +16,16 @@
       <Folder Include="Scripts\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Areas\Admin\Views\Shared\Error.cshtml" />
+      <AdditionalFiles Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+      <AdditionalFiles Include="Areas\Admin\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\Shared\Components\MainMenu\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\GameCard\GameList.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Views\GameCard\GameView.cshtml" />
+    </ItemGroup>
+
 </Project>

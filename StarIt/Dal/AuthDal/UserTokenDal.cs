@@ -6,13 +6,13 @@ public class UserTokenDal : IUserTokenDal
     {
         Guid tokenGuid = Guid.NewGuid();
         const string sql = """
-                     INSERT INTO user_token (token_id, user_id, created) VALUES (UUID_TO_BIN(@token_id, false), @user_id, NOW());
+                     INSERT INTO user_token (tokenid, userid, created) VALUES (UUID_TO_BIN(@tokenid, false), @userid, NOW());
                      """;
         
         await DbHelper.ExecuteAsync(sql, new
         {
-            token_id = tokenGuid,
-            user_id = userId,
+            tokenid = tokenGuid,
+            userid = userId,
         });
         
         return tokenGuid;
@@ -21,9 +21,9 @@ public class UserTokenDal : IUserTokenDal
     public async Task<Guid> GetUserId(byte[] tokenId)
     {
         const string sql = """
-                           select user_id from user_token where token_id = uuid_to_bin(@tokenId);
+                           select userid from user_token where tokenid = uuid_to_bin(@tokenid);
                            """;
-        byte[]? userBinId = await DbHelper.QueryScalarAsync<byte[]>(sql, new { tokenId = new Guid(tokenId) });
+        byte[]? userBinId = await DbHelper.QueryScalarAsync<byte[]>(sql, new { tokenid = new Guid(tokenId) });
 
         return userBinId is null ? Guid.Empty : new Guid(userBinId);
     }
@@ -31,8 +31,8 @@ public class UserTokenDal : IUserTokenDal
     public async Task Delete(byte[] tokenId)
     {
         const string sql = """
-                           delete from user_token where token_id = uuid_to_bin(@tokenId);
+                           delete from user_token where tokenid = uuid_to_bin(@tokenid);
                            """;
-        await DbHelper.ExecuteAsync(sql, new { tokenId = new Guid(tokenId) });
+        await DbHelper.ExecuteAsync(sql, new { tokenid = new Guid(tokenId) });
     }
 }

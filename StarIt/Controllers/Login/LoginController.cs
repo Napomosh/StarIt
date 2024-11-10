@@ -1,16 +1,19 @@
 ﻿using StarIt.Bl.Auth;
 using StarIt.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using StarIt.Attributes;
 using StarIt.Tools;
 
 namespace StarIt.Controllers.Login;
 
+[Controller]
 public class LoginController(IAuth auth) : Controller
 {
     private readonly IAuth auth = auth;
 
     [HttpGet]
     [Route("/login")]
+    [SiteNoAuthorize]
     public IActionResult Login()
     {
         return View("Login", new UserViewModel());
@@ -18,6 +21,7 @@ public class LoginController(IAuth auth) : Controller
 
     [HttpGet]
     [Route("/logout")]
+    [SiteAuthorize]
     public IActionResult Logout()
     {
         auth.Logout();
@@ -26,6 +30,7 @@ public class LoginController(IAuth auth) : Controller
 
     [HttpPost]
     [Route("/login")]
+    [SiteNoAuthorize]
     public async Task<IActionResult> LoginPost(UserViewModel model)
     {
         if (ModelState.IsValid)

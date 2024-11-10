@@ -7,12 +7,13 @@ namespace StarIt.Controllers;
 
 public class HomeController(ILogger<HomeController> logger, ICurrentUser currentUser) : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
-    private readonly ICurrentUser _currentUser = currentUser;
+    private readonly ILogger<HomeController> logger = logger;
+    private readonly ICurrentUser currentUser = currentUser;
 
+    [Route("/")]
     public IActionResult Index()
     {
-        return View(_currentUser.IsAuthenticated());
+        return View(currentUser.IsAuthenticated());
     }
 
     public IActionResult Privacy()
