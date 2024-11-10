@@ -4,11 +4,13 @@ using StarIt.Tools;
 
 namespace StarIt.Bl;
 
-public class CurrentUser(IHttpContextAccessor contextAccessor, IWebCookie webCookie, IUserTokenDal userTokenDal) : ICurrentUser
+public class CurrentUser(IHttpContextAccessor contextAccessor, IWebCookie webCookie, IUserTokenDal userTokenDal
+    , IAuthDal authDal) : ICurrentUser
 {
     private readonly IHttpContextAccessor httpContextAccessor = contextAccessor;
     private readonly IWebCookie webCookie = webCookie;
     private readonly IUserTokenDal userTokenDal = userTokenDal;
+    private readonly IAuthDal authDal = authDal;
     
     public async Task<bool> IsAuthenticated()
     {
@@ -27,5 +29,16 @@ public class CurrentUser(IHttpContextAccessor contextAccessor, IWebCookie webCoo
             return Guid.Empty;
         Guid tokenGuid = Guid.Parse(tokenCookie);
         return await userTokenDal.GetUserId(tokenGuid.ToByteArray());
+    }
+
+    public async Task<bool> IsAdmin()
+    {
+        if (httpContextAccessor.HttpContext?.Session.GetString(AuthConstants.AUTH_ROLE_CURRENT)
+            is AuthConstants.AUTH_ROLE_ADMIN_ABBR)
+            return true;
+
+        var userId = await GetUserIdByToken();
+        var roles = await authDal.GetRoles(userId.ToByteArray());
+        return roles.Any(r => r.Abbreviation == AuthConstants.AUTH_ROLE_ADMIN_ABBR);
     }
 }
