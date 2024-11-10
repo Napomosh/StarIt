@@ -2,14 +2,16 @@
 using StarIt.Models;
 using StarIt.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using StarIt.Attributes;
 using StarIt.Tools;
 
 namespace StarIt.Controllers.Registration;
 
 [Controller]
+[SiteNoAuthorize]
 public class RegistrationController(IAuth auth) : Controller
 {
-    private readonly IAuth _auth = auth;
+    private readonly IAuth auth = auth;
     
     [HttpGet]
     [Route("/register")]
@@ -25,13 +27,13 @@ public class RegistrationController(IAuth auth) : Controller
         if (ModelState.IsValid)
         {
             UserModel userModel = Mappers.RegistrationMapper.MapUserViewModelToDataModel(model);
-            if (await _auth.IsEmailExist(model.Email))
+            if (await auth.IsEmailExist(model.Email))
             {
                 ModelState.AddModelError("Email", "Email already exists");
                 return View("Register", model);
             }
-            if (await _auth.RegisterUser(userModel) != Guid.Empty)
-                await _auth.Login(userModel.Email, userModel.Password);
+            if (await auth.RegisterUser(userModel) != Guid.Empty)
+                await auth.Login(model.Email, model.Password);
             
             return Redirect("/");
         }

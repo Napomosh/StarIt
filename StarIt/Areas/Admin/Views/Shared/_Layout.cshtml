@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -14,8 +12,11 @@
 <header>
     <nav class="navbar navbar-light bg-light border-bottom">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="HomeAdmin" asp-action="Index">StarIt</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">StarIt</a>
             <div class="navbar-expand d-flex justify-content-between right-align-text">
+                <ul class="navbar-nav flex-grow-1 me-2">
+                    @await Component.InvokeAsync("AdminMenu")
+                </ul>
                 <ul class="navbar-nav flex-grow-1 me-2">
                     @await Component.InvokeAsync("MainMenu")
                 </ul>
@@ -31,7 +32,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2024 - StarIt - <a asp-area="" asp-controller="HomeAdmin" asp-action="Privacy">Privacy</a>
+        &copy; 2024 - StarIt - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

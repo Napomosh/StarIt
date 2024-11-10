@@ -1,17 +1,21 @@
 using StarIt.Bl.Common;
+using StarIt.Bl.Game;
 using StarIt.Dal.AuthDal;
+using StarIt.Dal.Games;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IAuthDal, AuthDal>();
+builder.Services.AddSingleton<IGameDal, GameDal>();
 builder.Services.AddSingleton<IEncrypt, Encrypt>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IUserTokenDal, UserTokenDal>();
 
 builder.Services.AddScoped<StarIt.Bl.Auth.IAuth, StarIt.Bl.Auth.Auth>();
 builder.Services.AddScoped<StarIt.Bl.ICurrentUser, StarIt.Bl.CurrentUser>();
+builder.Services.AddScoped<IGameBl, GameBl>();
 builder.Services.AddScoped<IWebCookie, WebCookie>();
 
 
@@ -38,6 +42,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=HomeAdmin}/{action=Index}/{id?}");
 
 app.Run();
