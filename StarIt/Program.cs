@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IAuthDal, AuthDal>();
-builder.Services.AddSingleton<IGameDal, GameDal>();
+builder.Services.AddSingleton<IGameCardDal, GameCardCardDal>();
 builder.Services.AddSingleton<IEncrypt, Encrypt>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IUserTokenDal, UserTokenDal>();

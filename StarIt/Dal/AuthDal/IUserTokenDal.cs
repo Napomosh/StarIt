@@ -2,7 +2,8 @@
 
 public interface IUserTokenDal
 {
-    public Task<Guid> Create(byte[] userId);
-    public Task<Guid> GetUserId(byte[] userId);
-    public Task Delete(byte[] tokenId);
+    public Task<Guid> Create(Guid userId);
+    public Task<Guid> GetUserId(Guid userId);
+    public Task Delete(Guid tokenId);
+    public Task Delete(string tokenId);
 }

@@ -17,7 +17,7 @@ public class BaseTest
     protected readonly IGameBl gameBl;
     
     private readonly IAuthDal authDal = new AuthDal();
-    private readonly IGameDal gameDal = new GameDal();
+    private readonly IGameCardDal _gameCardDal = new GameCardCardDal();
     private readonly IEncrypt encrypt = new Encrypt();
     private readonly IUserTokenDal userTokenDal = new UserTokenDal();
 
@@ -26,6 +26,6 @@ public class BaseTest
         webCookie = new TestCookie();
         authBl = new Auth(authDal, encrypt, httpContextAccessor, userTokenDal, webCookie);
         currentUser = new CurrentUser(httpContextAccessor, webCookie, userTokenDal, authDal);
-        gameBl = new GameBl(gameDal);
+        gameBl = new GameBl(_gameCardDal);
     }
 }

@@ -1,5 +1,5 @@
 create table user_token (
-    tokenid binary(16) default(uuid_to_bin(uuid())) primary key,
-    userid binary(16),
-    created timestamp
+    tokenid uuid default  gen_random_uuid() primary key,
+    userid uuid not null,
+    created timestamp default current_timestamp
 );

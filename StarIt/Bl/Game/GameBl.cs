@@ -3,11 +3,10 @@ using StarIt.Models;
 
 namespace StarIt.Bl.Game;
 
-public class GameBl(IGameDal gameDal) : IGameBl
+public class GameBl(IGameCardDal gameCardDal) : IGameBl
 {
-    private readonly IGameDal gameDal = gameDal;
-
-
+    private readonly IGameCardDal gameCardDal = gameCardDal;
+    
     public async Task<bool> CreateGame(string title, string description, string imagesPath)
     {
         GameModel gameModel = new GameModel
@@ -23,6 +22,6 @@ public class GameBl(IGameDal gameDal) : IGameBl
 
     public async Task<bool> CreateGame(GameModel model)
     {
-        return await gameDal.CreateGame(model) != Guid.Empty;
+        return await gameCardDal.CreateGame(model) != 0;
     }
 }

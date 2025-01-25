@@ -28,7 +28,7 @@ public class CurrentUser(IHttpContextAccessor contextAccessor, IWebCookie webCoo
         if (tokenCookie.Equals(string.Empty))
             return Guid.Empty;
         Guid tokenGuid = Guid.Parse(tokenCookie);
-        return await userTokenDal.GetUserId(tokenGuid.ToByteArray());
+        return await userTokenDal.GetUserId(tokenGuid);
     }
 
     public async Task<bool> IsAdmin()
@@ -38,7 +38,7 @@ public class CurrentUser(IHttpContextAccessor contextAccessor, IWebCookie webCoo
             return true;
 
         var userId = await GetUserIdByToken();
-        var roles = await authDal.GetRoles(userId.ToByteArray());
+        var roles = await authDal.GetRoles(userId);
         return roles.Any(r => r.Abbreviation == AuthConstants.AUTH_ROLE_ADMIN_ABBR);
     }
 }

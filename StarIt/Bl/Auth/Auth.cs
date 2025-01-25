@@ -33,11 +33,11 @@ public class Auth(
     public async Task<bool> Login(string email, string password, bool rememberMe = false)
     {
         var user = await authDal.GetUser(email);
-        var result = !user.IsEmpty && encrypt.HashPassword(password, user.Salt).Equals(user.Password);
+        var result = user.UserId != Guid.Empty && encrypt.HashPassword(password, user.Salt).Equals(user.Password);
         if (!result) 
             return false;
         
-        httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_USER_ID, new Guid(user.UserId).ToString());
+        httpContextAccessor.HttpContext?.Session.SetString(AuthConstants.AUTH_USER_ID, user.UserId.ToString());
         if (rememberMe)
         {
             Guid token = await userTokenDal.Create(user.UserId);
@@ -54,7 +54,7 @@ public class Auth(
     public async Task Logout()
     {
         httpContextAccessor.HttpContext?.Session.Clear();
-        await  userTokenDal.Delete(new Guid( webCookie.Get(AuthConstants.AUTH_REMEMBER_ME_COOKIE)).ToByteArray());
+        await  userTokenDal.Delete( webCookie.Get(AuthConstants.AUTH_REMEMBER_ME_COOKIE));
         webCookie.Delete(AuthConstants.AUTH_REMEMBER_ME_COOKIE);
     }
 

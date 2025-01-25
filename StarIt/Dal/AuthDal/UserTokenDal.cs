@@ -2,37 +2,39 @@
 
 public class UserTokenDal : IUserTokenDal
 {
-    public async Task<Guid> Create(byte[] userId)
+    public async Task<Guid> Create(Guid userId)
     {
-        Guid tokenGuid = Guid.NewGuid();
         const string sql = """
-                     INSERT INTO user_token (tokenid, userid, created) VALUES (UUID_TO_BIN(@tokenid, false), @userid, NOW());
+                     INSERT INTO user_token (userid, created) VALUES (@userid, NOW())
+                     RETURNING tokenId;
                      """;
         
-        await DbHelper.ExecuteAsync(sql, new
-        {
-            tokenid = tokenGuid,
-            userid = userId,
-        });
-        
+        Guid tokenGuid = await DbHelper.QueryScalarAsync<Guid>(sql, new { userid = userId, });
+        Console.Out.WriteLine($"Token with id: {tokenGuid} was created.");
         return tokenGuid;
     }
 
-    public async Task<Guid> GetUserId(byte[] tokenId)
+    public async Task<Guid> GetUserId(Guid tokenId)
     {
         const string sql = """
-                           select userid from user_token where tokenid = uuid_to_bin(@tokenid);
+                           select userid from user_token where tokenid = @tokenid;
                            """;
-        byte[]? userBinId = await DbHelper.QueryScalarAsync<byte[]>(sql, new { tokenid = new Guid(tokenId) });
+        Guid userBinId = await DbHelper.QueryScalarAsync<Guid>(sql, new { tokenid = tokenId });
 
-        return userBinId is null ? Guid.Empty : new Guid(userBinId);
+        return userBinId;
     }
 
-    public async Task Delete(byte[] tokenId)
+    public async Task Delete(Guid tokenId)
     {
         const string sql = """
-                           delete from user_token where tokenid = uuid_to_bin(@tokenid);
+                           delete from user_token where tokenid = @tokenid;
                            """;
-        await DbHelper.ExecuteAsync(sql, new { tokenid = new Guid(tokenId) });
+        await DbHelper.ExecuteAsync(sql, new { tokenid = tokenId });
+    }
+
+    public async Task Delete(string tokenId)
+    {
+        Guid.TryParse(tokenId, out Guid token);
+        await Delete(token);
     }
 }

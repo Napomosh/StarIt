@@ -1,8 +1,9 @@
 create table app_user(
-    userid binary(16) default(uuid_to_bin(uuid())) primary key,
+    userid uuid default gen_random_uuid() primary key,
     email varchar(50),
     password varchar(100),
     salt varchar(50),
+    nickname varchar(50),
     status int
 );
 
